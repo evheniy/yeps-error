@@ -12,18 +12,4 @@ module.exports = () => async context => {
             ctx.res.end('Internal Server Error');
         }
     });
-
-    /* context.app.resolve = () => {
-        debug('Update resolve');
-        context.app.then(ctx => {
-            debug('Register 404 error handler');
-            if (!ctx.res.finished) {
-                debug('Send 404 error handler');
-                ctx.res.writeHead(404);
-                ctx.res.end('Not Found');
-            }
-        });
-        debug('Old resolve');
-        return context.app.resolve();
-    };*/
 };
