@@ -20,3 +20,45 @@
 [![Twitter](https://img.shields.io/twitter/url/https/github.com/evheniy/yeps-error.svg?style=social)](https://twitter.com/intent/tweet?text=Wow:&url=%5Bobject%20Object%5D)
 
 
+Simple 404/500 error handler for YEPS app
+
+## Installation
+
+    npm i -S yeps-error
+    
+## How to use
+
+    const App = require('yeps');
+    const app = new App();
+
+    app.all([error()]);
+    
+Or
+
+    app.then(error());
+    
+but it could be slower
+
+## How to make custom error handler
+
+    // create app
+    const App = require('yeps');
+    const app = new App();
+
+    // add middlewares
+    app.all([...]);
+    
+    // add router
+    app.then(router.resolve())
+
+    // 404 error handler
+    app.then(async ctx => {
+        ctx.res.writeHead(404);
+        ctx.res.end('Not Found');
+    });
+    
+    // 500 error handler
+    app.catch(async (err, ctx) => {
+        ctx.res.writeHead(500);
+        ctx.res.end('Internal Server Error');
+    });
