@@ -24,7 +24,7 @@ Simple 404/500 error handler for YEPS app
 
 ## Installation
 
-    npm i -S yeps-error
+    npm i -S yeps yeps-error
     
 ## How to use
 

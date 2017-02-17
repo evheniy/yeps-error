@@ -8,7 +8,7 @@ const expect = chai.expect;
 chai.use(chaiHttp);
 let app;
 
-describe('YAPS error handler test', () => {
+describe('YEPS error handler test', () => {
 
     beforeEach(() => {
         app = new App();
