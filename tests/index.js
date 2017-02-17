@@ -61,7 +61,8 @@ describe('YAPS error handler test', () => {
 
         app.then(error());
 
-        await chai.request(http.createServer(app.resolve()))
+        const server = http.createServer(app.resolve());
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -69,7 +70,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Not Found');
                 isTestFinished1 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -77,7 +78,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Not Found');
                 isTestFinished2 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -169,7 +170,8 @@ describe('YAPS error handler test', () => {
             throw new Error('test');
         });
 
-        await chai.request(http.createServer(app.resolve()))
+        const server = http.createServer(app.resolve());
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -177,7 +179,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Internal Server Error');
                 isTestFinished1 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -185,7 +187,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Internal Server Error');
                 isTestFinished2 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -210,7 +212,8 @@ describe('YAPS error handler test', () => {
             throw new Error('test');
         });
 
-        await chai.request(http.createServer(app.resolve()))
+        const server = http.createServer(app.resolve());
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -218,7 +221,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Internal Server Error');
                 isTestFinished1 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
@@ -226,7 +229,7 @@ describe('YAPS error handler test', () => {
                 expect(err.message).to.be.equal('Internal Server Error');
                 isTestFinished2 = true;
             });
-        await chai.request(http.createServer(app.resolve()))
+        await chai.request(server)
             .get('/')
             .send()
             .catch(err => {
