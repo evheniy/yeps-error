@@ -24,14 +24,16 @@ Simple 404/500 error handler for YEPS app
 
 ## Installation
 
-    npm i -S yeps yeps-error
+    npm i -S yeps-error
     
 ## How to use
 
     const App = require('yeps');
     const app = new App();
 
-    app.all([error()]);
+    app.all([
+        error(),
+    ]);
     
 Or
 
@@ -44,11 +46,18 @@ but it could be slower
     // create app
     const App = require('yeps');
     const app = new App();
+    const Router = require('yeps.router');
+    const router = new Router();
 
     // add middlewares
     app.all([...]);
     
     // add router
+    router.catch().then(async ctx => {
+        ctx.res.writeHead(200);
+        ctx.res.end('Homepage');
+    });
+    
     app.then(router.resolve())
 
     // 404 error handler
@@ -62,3 +71,12 @@ but it could be slower
         ctx.res.writeHead(500);
         ctx.res.end('Internal Server Error');
     });
+    
+## Links
+
+* [yeps](https://github.com/evheniy/yeps) - YEPS
+* [yeps-benchmark](https://github.com/evheniy/yeps-benchmark) - performance comparison koa2, express and node http
+* [yeps-router](https://github.com/evheniy/yeps-router) - YEPS promise based router
+* [yeps-redis](https://github.com/evheniy/yeps-redis) - YEPS promise based redis client - ioredis
+* [yeps-logger](https://github.com/evheniy/yeps-logger) - YEPS Async logger - winston
+* [yeps-boilerplate](https://github.com/evheniy/yeps-boilerplate) - YEPS app boilerplate
