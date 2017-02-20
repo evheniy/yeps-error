@@ -80,3 +80,4 @@ but it could be slower
 * [yeps-redis](https://github.com/evheniy/yeps-redis) - YEPS promise based redis client - ioredis
 * [yeps-logger](https://github.com/evheniy/yeps-logger) - YEPS Async logger - winston
 * [yeps-boilerplate](https://github.com/evheniy/yeps-boilerplate) - YEPS app boilerplate
+* [yeps-express-wrapper](https://github.com/evheniy/yeps-express-wrapper) - YEPS express wrapper
