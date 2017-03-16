@@ -62,6 +62,28 @@ describe('YEPS error handler test', () => {
         expect(isTestFinished2).is.true;
     });
 
+    it('should test disabled 404 error handler', async () => {
+
+        let isTestFinished = false;
+
+        app.then(error({ hasUserError: false }));
+
+        app.then(async ctx => {
+            ctx.res.statusCode = 200;
+            ctx.res.end('');
+        });
+
+        await chai.request(http.createServer(app.resolve()))
+            .get('/404')
+            .send()
+            .then(res => {
+                expect(res).to.have.status(200);
+                isTestFinished = true;
+            });
+
+        expect(isTestFinished).is.true;
+    });
+
     it('should test 404 error handler json', async () => {
 
         let isTestFinished = false;
@@ -277,6 +299,31 @@ describe('YEPS error handler test', () => {
 
         expect(isTestFinished1).is.true;
         expect(isTestFinished2).is.true;
+    });
+
+    it('should test disabled 500 error handler with app.then', async () => {
+
+        let isTestFinished = false;
+
+        app.then(error({ hasServerError: false }));
+        app.then(async () => {
+            throw new Error('test');
+        });
+        app.catch(async (err, ctx) => {
+            ctx.res.statusCode = 500;
+            ctx.res.end(err.message);
+        });
+
+        await chai.request(http.createServer(app.resolve()))
+            .get('/')
+            .send()
+            .catch(err => {
+                expect(err).to.have.status(500);
+                expect(err.message).to.be.equal('Internal Server Error');
+                isTestFinished = true;
+            });
+
+        expect(isTestFinished).is.true;
     });
 
     it('should test 500 error handler with app.then with logger without text', async () => {

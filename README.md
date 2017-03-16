@@ -41,10 +41,24 @@ Or
 
     app.then(error());
 
-## JSON request
+## Config
+
+### JSON request
      
      app.all([
          error({ isJSON: true }),
+     ]);
+     
+### Hide user error (404)
+     
+     app.all([
+         error({ hasUserError: false }),
+     ]);
+     
+### Hide server error (500)
+     
+     app.all([
+         error({ hasServerError: false }),
      ]);
      
 ## With logger
@@ -53,7 +67,7 @@ Or
     
     app.all([
         logger(),
-        error({ isJSON: true }),
+        error(),
     ]);
     
 
