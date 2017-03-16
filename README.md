@@ -30,6 +30,8 @@ Simple 404/500 error handler for YEPS app
 
     const App = require('yeps');
     const app = new App();
+    
+    const error = require('yeps-error');
 
     app.all([
         error(),
@@ -38,8 +40,22 @@ Simple 404/500 error handler for YEPS app
 Or
 
     app.then(error());
+
+## JSON request
+     
+     app.all([
+         error({ isJSON: true }),
+     ]);
+     
+## With logger
+
+    const logger = require('yeps-logger');
     
-but it could be slower
+    app.all([
+        logger(),
+        error({ isJSON: true }),
+    ]);
+    
 
 ## How to make custom error handler
 
@@ -54,22 +70,28 @@ but it could be slower
     
     // add router
     router.catch().then(async ctx => {
-        ctx.res.writeHead(200);
+        
+        ctx.res.statusCode = 200;
         ctx.res.end('Homepage');
+        
     });
     
     app.then(router.resolve())
 
     // 404 error handler
     app.then(async ctx => {
-        ctx.res.writeHead(404);
+        
+        ctx.res.statusCode = 404;
         ctx.res.end('Not Found');
+        
     });
     
     // 500 error handler
     app.catch(async (err, ctx) => {
-        ctx.res.writeHead(500);
+        
+        ctx.res.statusCode = 500;
         ctx.res.end('Internal Server Error');
+        
     });
     
 ## Links

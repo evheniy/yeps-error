@@ -1,6 +1,6 @@
 {
   "name": "yeps-error",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "YEPS Error Handler",
   "main": "index.js",
   "scripts": {
