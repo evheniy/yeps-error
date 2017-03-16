@@ -1,25 +1,64 @@
 const debug = require('debug')('yeps:error');
 const http = require('http');
 
-module.exports = () => async context => {
+module.exports = ({ isJSON = false } = {}) => async context => {
+
     debug('Add error handler');
 
+    if (isJSON) {
+
+        debug('Content-Type: application/json');
+
+        context.res.setHeader('Content-Type', 'application/json');
+    }
+
+    debug('Register 404 error handler');
+
     context.app.then(async ctx => {
-        debug('Register 404 error handler');
+
         if (!ctx.res.finished) {
+
             debug('Send 404 error');
-            ctx.res.writeHead(404);
-            ctx.res.end(http.STATUS_CODES[404]);
+
+            if (ctx.logger) {
+                ctx.logger.error(`Not Found (404) url: ${ctx.req.url}`);
+            }
+
+            ctx.res.statusCode = 404;
+
+            if (isJSON) {
+                ctx.res.end(JSON.stringify({ message: 'Not Found' }));
+            } else {
+                ctx.res.end(http.STATUS_CODES[404]);
+            }
         }
     });
 
+    debug('Register 500 error handler');
+
     context.app.catch(async (err, ctx) => {
-        debug('Register 500 error handler');
-        debug(err);
-        if (!ctx.res.finished) {
-            debug('Send 500 error');
-            ctx.res.writeHead(500);
-            ctx.res.end(http.STATUS_CODES[500]);
+
+        if (err) {
+
+            debug(err);
+
+            if (ctx.logger) {
+                ctx.logger.error(err);
+            }
+
+            if (!ctx.res.finished) {
+
+                ctx.res.statusCode = 500;
+
+                if (isJSON) {
+                    ctx.res.end(JSON.stringify({
+                        message: err.message || http.STATUS_CODES[500]
+                    }));
+                } else {
+                    ctx.res.end(http.STATUS_CODES[500]);
+                }
+            }
         }
+
     });
 };
