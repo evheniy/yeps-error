@@ -2,7 +2,7 @@ const App = require('yeps');
 const error = require('..');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const http = require('http');
+const srv = require('yeps-server');
 
 const { expect } = chai;
 
@@ -13,7 +13,7 @@ let server;
 describe('YEPS error handler test', () => {
   beforeEach(() => {
     app = new App();
-    server = http.createServer(app.resolve());
+    server = srv.createHttpServer(app);
   });
 
   afterEach(() => {
