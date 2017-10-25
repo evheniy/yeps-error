@@ -46,6 +46,7 @@ Or
 ### JSON request
      
      app.all([
+         // res.setHeader('Content-Type', 'application/json')
          error({ isJSON: true }),
      ]);
      
@@ -84,36 +85,22 @@ Or
     
     // add router
     router.catch().then(async ctx => {
-        
         ctx.res.statusCode = 200;
         ctx.res.end('Homepage');
-        
     });
     
-    app.then(router.resolve())
+    app.then(router.resolve());
 
     // 404 error handler
     app.then(async ctx => {
-        
         ctx.res.statusCode = 404;
         ctx.res.end('Not Found');
-        
     });
     
     // 500 error handler
     app.catch(async (err, ctx) => {
-        
         ctx.res.statusCode = 500;
         ctx.res.end('Internal Server Error');
-        
     });
     
-## Links
-
-* [yeps](https://github.com/evheniy/yeps) - YEPS
-* [yeps-benchmark](https://github.com/evheniy/yeps-benchmark) - performance comparison koa2, express and node http
-* [yeps-router](https://github.com/evheniy/yeps-router) - YEPS promise based router
-* [yeps-redis](https://github.com/evheniy/yeps-redis) - YEPS promise based redis client - ioredis
-* [yeps-logger](https://github.com/evheniy/yeps-logger) - YEPS Async logger - winston
-* [yeps-boilerplate](https://github.com/evheniy/yeps-boilerplate) - YEPS app boilerplate
-* [yeps-express-wrapper](https://github.com/evheniy/yeps-express-wrapper) - YEPS express wrapper
+#### [YEPS documentation](http://yeps.info/)
