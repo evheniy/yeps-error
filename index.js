@@ -44,14 +44,14 @@ module.exports = ({ isJSON = false, hasUserError = true, hasServerError = true }
         }
 
         if (!ctx.res.finished) {
-          ctx.res.statusCode = 500;
+          ctx.res.statusCode = err.code && http.STATUS_CODES[err.code] ? err.code : 500;
 
           if (isJSON) {
             ctx.res.end(JSON.stringify({
-              message: err.message || http.STATUS_CODES[500],
+              message: err.message || http.STATUS_CODES[ctx.res.statusCode],
             }));
           } else {
-            ctx.res.end(http.STATUS_CODES[500]);
+            ctx.res.end(err.message || http.STATUS_CODES[ctx.res.statusCode]);
           }
         }
       }

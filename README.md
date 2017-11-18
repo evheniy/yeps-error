@@ -84,7 +84,7 @@ Or
     app.all([...]);
     
     // add router
-    router.catch().then(async ctx => {
+    router.catch().then(async (ctx) => {
         ctx.res.statusCode = 200;
         ctx.res.end('Homepage');
     });
@@ -92,7 +92,7 @@ Or
     app.then(router.resolve());
 
     // 404 error handler
-    app.then(async ctx => {
+    app.then(async (ctx) => {
         ctx.res.statusCode = 404;
         ctx.res.end('Not Found');
     });
@@ -102,5 +102,17 @@ Or
         ctx.res.statusCode = 500;
         ctx.res.end('Internal Server Error');
     });
+    
+## HTTP response message and status code
+
+    app.then(async (ctx) => {
+        const err = new Error();
+        err.code = 403;
+        
+        return Promise.reject(err);
+    });
+    
+And you will see http response **403** with message **Forbidden**.
+
     
 #### [YEPS documentation](http://yeps.info/)

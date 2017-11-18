@@ -865,4 +865,29 @@ describe('YEPS error handler test', () => {
     expect(isTestFinished2).is.true;
     expect(isTestFinished3).is.true;
   });
+
+  it('should test error code', async () => {
+    let isTestFinished = false;
+
+    app.then(error());
+
+    app.then(async () => {
+      const err = new Error();
+      err.code = 403;
+
+      return Promise.reject(err);
+    });
+
+    await chai.request(server)
+      .get('/')
+      .send()
+      .catch((err) => {
+        expect(err).to.have.status(403);
+        expect(err.message).to.be.equal('Forbidden');
+        expect(err.response.text).to.be.equal('Forbidden');
+        isTestFinished = true;
+      });
+
+    expect(isTestFinished).is.true;
+  });
 });
