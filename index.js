@@ -2,57 +2,68 @@ const debug = require('debug')('yeps:error');
 const http = require('http');
 
 module.exports = ({ isJSON = false, hasUserError = true, hasServerError = true } = {}) => async (context) => {
-  debug('Add error handler');
+  debug('Running error handler...');
 
   if (isJSON) {
-    debug('Content-Type: application/json');
+    debug('Setting json header...');
+    debug('Header: "Content-Type: application/json"');
 
     context.res.setHeader('Content-Type', 'application/json');
   }
 
-  if (hasUserError) {
-    debug('Register 404 error handler');
+  if (hasUserError && !context.app.hasUserError) {
+    debug('Registering 404 error handler...');
+
+    context.app.hasUserError = true;
 
     context.app.then(async (ctx) => {
-      if (!ctx.res.finished) {
-        debug('Send 404 error');
+      debug('Running 404 error handler...');
 
-        if (ctx.logger) {
-          ctx.logger.error(`Not Found (404) url: ${ctx.req.url}`);
-        }
+      if (!ctx.res.finished) {
+        debug('Sending 404 error...');
 
         ctx.res.statusCode = 404;
+        debug('Status code:', 404);
+
+        const message = http.STATUS_CODES[404];
+        debug('Message:', message);
 
         if (isJSON) {
-          ctx.res.end(JSON.stringify({ message: 'Not Found' }));
+          ctx.res.end(JSON.stringify({ message }));
         } else {
-          ctx.res.end(http.STATUS_CODES[404]);
+          ctx.res.end(message);
         }
       }
     });
   }
 
-  if (hasServerError) {
-    debug('Register 500 error handler');
+  if (hasServerError && !context.app.hasServerError) {
+    debug('Registering 500 error handler...');
+
+    context.app.hasServerError = true;
 
     context.app.catch(async (err, ctx) => {
-      if (err) {
-        debug(err);
+      debug('Running 500 error handler...');
 
-        if (ctx.logger) {
-          ctx.logger.error(err);
-        }
+      debug('Error:', err);
 
-        if (!ctx.res.finished) {
-          ctx.res.statusCode = err.code && http.STATUS_CODES[err.code] ? err.code : 500;
+      if (!ctx.res.finished) {
+        debug('Sending 500 error...');
 
-          if (isJSON) {
-            ctx.res.end(JSON.stringify({
-              message: err.message || http.STATUS_CODES[ctx.res.statusCode],
-            }));
-          } else {
-            ctx.res.end(err.message || http.STATUS_CODES[ctx.res.statusCode]);
-          }
+        const statusCode = err.code && http.STATUS_CODES[err.code] ? err.code : 500;
+        debug('Status code:', statusCode);
+
+        const message = err.message || http.STATUS_CODES[statusCode];
+        debug('Error message:', message);
+
+        ctx.res.statusCode = statusCode;
+
+        if (isJSON) {
+          ctx.res.end(JSON.stringify({
+            message,
+          }));
+        } else {
+          ctx.res.end(message);
         }
       }
     });

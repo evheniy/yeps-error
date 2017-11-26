@@ -38,35 +38,6 @@ describe('YEPS error handler test', () => {
     expect(isTestFinished).is.true;
   });
 
-  it('should test 404 error handler with logger', async () => {
-    let isTestFinished1 = false;
-    let isTestFinished2 = false;
-
-    app.then(error());
-
-    app.then(async (ctx) => {
-      ctx.logger = {
-        error(text) {
-          expect(text).to.be.equal('Not Found (404) url: /');
-          isTestFinished1 = true;
-        },
-      };
-    });
-
-    await chai.request(server)
-      .get('/')
-      .send()
-      .catch((err) => {
-        expect(err).to.have.status(404);
-        expect(err.message).to.be.equal('Not Found');
-        expect(err.response.text).to.be.equal('Not Found');
-        isTestFinished2 = true;
-      });
-
-    expect(isTestFinished1).is.true;
-    expect(isTestFinished2).is.true;
-  });
-
   it('should test disabled 404 error handler', async () => {
     let isTestFinished = false;
 
@@ -273,38 +244,6 @@ describe('YEPS error handler test', () => {
     expect(isTestFinished).is.true;
   });
 
-  it('should test 500 error handler with app.then with logger', async () => {
-    let isTestFinished1 = false;
-    let isTestFinished2 = false;
-
-    app.then(error());
-
-    app.then(async (ctx) => {
-      ctx.logger = {
-        error(err) {
-          expect(err.message).to.be.equal('test');
-          isTestFinished1 = true;
-        },
-      };
-    });
-
-    app.then(async () => {
-      throw new Error('test');
-    });
-
-    await chai.request(server)
-      .get('/')
-      .send()
-      .catch((err) => {
-        expect(err).to.have.status(500);
-        expect(err.message).to.be.equal('Internal Server Error');
-        isTestFinished2 = true;
-      });
-
-    expect(isTestFinished1).is.true;
-    expect(isTestFinished2).is.true;
-  });
-
   it('should test disabled 500 error handler with app.then', async () => {
     let isTestFinished = false;
 
@@ -329,38 +268,6 @@ describe('YEPS error handler test', () => {
       });
 
     expect(isTestFinished).is.true;
-  });
-
-  it('should test 500 error handler with app.then with logger without text', async () => {
-    let isTestFinished1 = false;
-    let isTestFinished2 = false;
-
-    app.then(error());
-
-    app.then(async (ctx) => {
-      ctx.logger = {
-        error(err) {
-          expect(err.message).to.be.equal('');
-          isTestFinished1 = true;
-        },
-      };
-    });
-
-    app.then(async () => {
-      throw new Error();
-    });
-
-    await chai.request(server)
-      .get('/')
-      .send()
-      .catch((err) => {
-        expect(err).to.have.status(500);
-        expect(err.message).to.be.equal('Internal Server Error');
-        isTestFinished2 = true;
-      });
-
-    expect(isTestFinished1).is.true;
-    expect(isTestFinished2).is.true;
   });
 
   it('should test 500 error handler with app.then json', async () => {
@@ -885,6 +792,27 @@ describe('YEPS error handler test', () => {
         expect(err).to.have.status(403);
         expect(err.message).to.be.equal('Forbidden');
         expect(err.response.text).to.be.equal('Forbidden');
+        isTestFinished = true;
+      });
+
+    expect(isTestFinished).is.true;
+  });
+
+  it('should test finished response', async () => {
+    let isTestFinished = false;
+
+    app.then(error());
+
+    app.then(async (ctx) => {
+      ctx.res.end('finished');
+    });
+
+    await chai.request(server)
+      .get('/')
+      .send()
+      .then((res) => {
+        expect(res).to.have.status(200);
+        expect(res.text).to.be.equal('finished');
         isTestFinished = true;
       });
 
